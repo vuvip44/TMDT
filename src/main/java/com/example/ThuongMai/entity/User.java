@@ -25,9 +25,7 @@ public class User {
 
     private String address;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "avatar_id")
-    private Image avatar;
+    private String urlAvatar;
 
     private String phoneNumber;
 
@@ -41,10 +39,6 @@ public class User {
     private String createdBy;
 
     private String updatedBy;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shop_id",referencedColumnName = "id")
-    private Shop shop;
 
     @ManyToOne
     @JoinColumn(name="role_id")

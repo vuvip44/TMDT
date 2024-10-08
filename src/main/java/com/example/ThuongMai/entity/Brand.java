@@ -33,7 +33,5 @@ public class Brand {
     @JsonIgnore
     private List<Product> products;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "avatar_id")
-    private Image avatar;
+    private String urlAvatar;
 }

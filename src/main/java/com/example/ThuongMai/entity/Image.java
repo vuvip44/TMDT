@@ -13,15 +13,6 @@ public class Image {
 
     private String url;
 
-    @OneToOne(mappedBy = "avatar", fetch = FetchType.LAZY)
-    private User user;
-
-    @OneToOne(mappedBy = "avatar", fetch = FetchType.LAZY)
-    private Brand brand;
-
-    @OneToOne(mappedBy = "avatar", fetch = FetchType.LAZY)
-    private Shop shop;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
