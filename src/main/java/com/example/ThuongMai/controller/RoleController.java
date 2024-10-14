@@ -6,6 +6,7 @@ import com.example.ThuongMai.service.RoleService;
 import com.example.ThuongMai.util.annotation.ApiMessage;
 import com.example.ThuongMai.util.error.IdInValidException;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class RoleController {
 
     @PostMapping("/roles")
     @ApiMessage("Create a role")
-    public ResponseEntity<Role> createRole(@RequestBody Role role) throws IdInValidException {
+    public ResponseEntity<Role> createRole(@RequestBody @Valid Role role) throws IdInValidException {
         if(this.roleService.isExistRole(role)){
             throw new IdInValidException("Role với name "+role.getName()+" đã tồn tại");
         }
