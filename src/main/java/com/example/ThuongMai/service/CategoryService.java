@@ -47,7 +47,9 @@ public class CategoryService {
 
     public Category updateCategory(Category categoryDTO) {
         Category category = this.getById(categoryDTO.getId());
+
         category.setName(categoryDTO.getName());
+
         category.setActive(categoryDTO.isActive());
         return categoryRepository.save(category);
     }
