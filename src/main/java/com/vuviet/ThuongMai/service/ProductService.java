@@ -1,6 +1,7 @@
 package com.vuviet.ThuongMai.service;
 
 import com.vuviet.ThuongMai.dto.requestdto.ReqCreateProductDTO;
+import com.vuviet.ThuongMai.dto.requestdto.ResShortProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResCreateProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResProductDetailDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResultPageDTO;
@@ -152,6 +153,7 @@ public class ProductService {
         res.setDiscount(product.getDiscount());
         res.setSales(product.getSales());
         res.setImageUrl(product.getImageUrl());
+        res.setTotalSold(product.getTotalSold());
         res.setTypeDiscount(productDTO.getTypeDiscount());
         res.setCreatedAt(product.getCreatedAt());
         res.setUpdatedAt(product.getUpdatedAt());
@@ -170,6 +172,7 @@ public class ProductService {
         res.setDescription(product.getDescription());
         res.setImageUrl(product.getImageUrl());
         res.setPriceUnit(product.getPriceUnit());
+        res.setTotalSold(product.getTotalSold());
         res.setUnitInStock(product.getUnitInStock());
         res.setSales(product.getSales());
         res.setImageUrl(product.getImageUrl());
@@ -204,6 +207,7 @@ public class ProductService {
             resCreateProductDTO.setUnitInStock(product.getUnitInStock());
             resCreateProductDTO.setSales(product.getSales());
             resCreateProductDTO.setTypeDiscount(product.getTypeDiscount());
+            resCreateProductDTO.setTotalSold(product.getTotalSold());
             resCreateProductDTO.setDiscount(product.getDiscount());
 
             resCreateProductDTO.setCreatedAt(product.getCreatedAt());
@@ -235,4 +239,34 @@ public class ProductService {
     public void deleteProduct(long id) {
         this.productRepository.deleteById(id);
     }
+
+    public ResultPageDTO getAllShortProduct(Specification<Product> spec, Pageable pageable){
+        Page<Product> pageProduct=this.productRepository.findAll(spec,pageable);
+        ResultPageDTO rs=new ResultPageDTO();
+        ResultPageDTO.Meta mt=new ResultPageDTO.Meta();
+
+        mt.setPage(pageable.getPageNumber()+1);
+        mt.setPageSize(pageable.getPageSize());
+        mt.setTotalPage(pageProduct.getTotalPages());
+        mt.setTotalElement(pageProduct.getTotalElements());
+
+        rs.setMeta(mt);
+        List<Product> products = pageProduct.getContent();
+        List<ResShortProductDTO> resCreateProductDTOs = new ArrayList<>();
+        for(Product product : products){
+            ResShortProductDTO resCreateProductDTO = new ResShortProductDTO();
+
+            resCreateProductDTO.setName(product.getName());
+
+            resCreateProductDTO.setPrice(product.getPriceUnit());
+
+            resCreateProductDTO.setTotalSold(product.getTotalSold());
+
+            resCreateProductDTOs.add(resCreateProductDTO);
+        }
+        rs.setResult(resCreateProductDTOs);
+        return rs;
+    }
+
+
 }

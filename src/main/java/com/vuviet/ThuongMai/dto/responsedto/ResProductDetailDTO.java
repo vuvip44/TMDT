@@ -16,6 +16,8 @@ public class ResProductDetailDTO {
 
     private long sales;
 
+    private long totalSold;
+
     private String imageUrl;
 
     private List<String> categories;

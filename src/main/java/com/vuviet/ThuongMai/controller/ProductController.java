@@ -90,4 +90,12 @@ public class ProductController {
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping("/products")
+    @ApiMessage("Get all product by user")
+    public ResponseEntity<ResultPageDTO> getAllProductsByUser(
+            @Filter Specification<Product> spec,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok(this.productService.getAllShortProduct(spec, pageable));
+    }
 }

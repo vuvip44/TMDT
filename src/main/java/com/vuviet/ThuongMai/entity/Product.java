@@ -29,7 +29,7 @@ public class Product {
 
     private long unitInStock;
 
-    private long totalSol=0;
+    private long totalSold=0;
 
     @Enumerated(EnumType.STRING)
     private TypeDiscount typeDiscount;

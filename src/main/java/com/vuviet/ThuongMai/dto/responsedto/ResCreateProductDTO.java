@@ -20,6 +20,8 @@ public class ResCreateProductDTO {
 
     private long unitInStock;
 
+    private long totalSold;
+
     private TypeDiscount typeDiscount;
 
     private long discount;
