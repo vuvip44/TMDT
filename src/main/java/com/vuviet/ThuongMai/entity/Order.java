@@ -1,5 +1,6 @@
 package com.vuviet.ThuongMai.entity;
 
+import com.vuviet.ThuongMai.util.constant.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,11 +31,14 @@ public class Order {
 
     private String updatedBy;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order",cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
     @PrePersist

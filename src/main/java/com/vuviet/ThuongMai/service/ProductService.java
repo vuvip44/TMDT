@@ -1,7 +1,7 @@
 package com.vuviet.ThuongMai.service;
 
 import com.vuviet.ThuongMai.dto.requestdto.ReqCreateProductDTO;
-import com.vuviet.ThuongMai.dto.requestdto.ResShortProductDTO;
+import com.vuviet.ThuongMai.dto.responsedto.ResShortProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResCreateProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResProductDetailDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResultPageDTO;

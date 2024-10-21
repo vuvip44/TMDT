@@ -1,4 +1,4 @@
-package com.vuviet.ThuongMai.dto.requestdto;
+package com.vuviet.ThuongMai.dto.responsedto;
 
 import lombok.Data;
 
