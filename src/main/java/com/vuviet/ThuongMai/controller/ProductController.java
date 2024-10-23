@@ -64,7 +64,7 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     @ApiMessage("Get product detail by id")
-    public ResponseEntity<ResProductDetailDTO> getProductDetail(@PathVariable int id) throws IdInValidException {
+    public ResponseEntity<ResProductDetailDTO> getProductDetail(@PathVariable("id") long id) throws IdInValidException {
         if(this.productService.getById(id) == null){
             throw new IdInValidException("Id "+id+" không tồn tại");
         }
@@ -82,7 +82,7 @@ public class ProductController {
 
     @DeleteMapping("/admin/products/{id}")
     @ApiMessage("Delete a product")
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id) throws IdInValidException {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") long id) throws IdInValidException {
         if(this.productService.getById(id) == null){
             throw new IdInValidException("Id "+id+" không tồn tại");
         }

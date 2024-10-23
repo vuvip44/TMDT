@@ -37,7 +37,7 @@ public class CategoryController {
 
     @GetMapping("/categories/{id}")
     @ApiMessage("Get category by id")
-    public ResponseEntity<Category> getCategoryById(@PathVariable long id) throws IdInValidException {
+    public ResponseEntity<Category> getCategoryById(@PathVariable("id") long id) throws IdInValidException {
         Category category=this.categoryService.getById(id);
         if(category==null){
             throw new IdInValidException("Id "+id+" không tồn tại");

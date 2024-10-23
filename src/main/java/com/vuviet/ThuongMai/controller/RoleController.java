@@ -36,7 +36,7 @@ public class RoleController {
 
     @GetMapping("/roles/{id}")
     @ApiMessage("Get role by id")
-    public ResponseEntity<Role> getRoleById(@PathVariable long id) throws IdInValidException {
+    public ResponseEntity<Role> getRoleById(@PathVariable("id") long id) throws IdInValidException {
         Role role=this.roleService.getRole(id);
 
         if(role==null){

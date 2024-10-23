@@ -37,7 +37,7 @@ public class BrandController {
 
     @GetMapping("/brands/{id}")
     @ApiMessage("Get brand by id")
-    public ResponseEntity<Brand> getBrandById(@PathVariable long id) throws IdInValidException {
+    public ResponseEntity<Brand> getBrandById(@PathVariable("id") long id) throws IdInValidException {
         Brand brand=this.brandService.getBrand(id);
         if(brand==null){
             throw new IdInValidException("Id "+id+" không tồn tại");
