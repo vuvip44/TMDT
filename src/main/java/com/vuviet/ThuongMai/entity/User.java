@@ -18,6 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "Không được để trống name")
     private String name;
 
     @NotBlank(message = "Không được để trống email")

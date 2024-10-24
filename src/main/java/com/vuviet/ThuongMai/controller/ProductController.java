@@ -35,7 +35,7 @@ public class ProductController {
         this.brandService = brandService;
     }
 
-    @PostMapping("/admin/products")
+    @PostMapping("/products")
     @ApiMessage("Create a product")
     public ResponseEntity<ResCreateProductDTO> createProduct(@RequestBody @Valid ReqCreateProductDTO req) throws IdInValidException {
         if(this.productService.isExistProduct(req)){
@@ -49,7 +49,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.createProduct(req));
     }
 
-    @PutMapping("/admin/products")
+    @PutMapping("/products")
     @ApiMessage("Update a product")
     public ResponseEntity<ResCreateProductDTO> updateProduct(@RequestBody ReqCreateProductDTO req) throws IdInValidException {
         if(this.productService.getById(req.getId()) == null){
@@ -80,7 +80,7 @@ public class ProductController {
         return ResponseEntity.ok(this.productService.getAllProduct(spec, pageable));
     }
 
-    @DeleteMapping("/admin/products/{id}")
+    @DeleteMapping("/products/{id}")
     @ApiMessage("Delete a product")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") long id) throws IdInValidException {
         if(this.productService.getById(id) == null){
