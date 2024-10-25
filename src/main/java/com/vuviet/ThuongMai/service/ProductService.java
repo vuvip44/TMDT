@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -99,7 +100,11 @@ public class ProductService {
     }
 
     public Product getById(long id) {
-        return this.productRepository.findById(id).get();
+        Optional<Product> productOptional = this.productRepository.findById(id);
+        if(productOptional.isPresent()){
+            return productOptional.get();
+        }
+        return null;
     }
 
     public ResCreateProductDTO updateProduct(ReqCreateProductDTO productDTO) {

@@ -1,7 +1,8 @@
 package com.vuviet.ThuongMai.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotBlank;
@@ -52,13 +53,17 @@ public class User {
     @JsonIgnore
     private List<Order> orders;
 
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedAt = Instant.now();
-    }
+//    @PrePersist
+//    public void handleBeforeCreate() {
+//        this.createdBy= SecurityUtil.getCurrentUserLogin().isPresent()==true?
+//                SecurityUtil.getCurrentUserLogin().get():null;
+//        this.createdAt = Instant.now();
+//    }
+//
+//    @PreUpdate
+//    public void handleBeforeUpdate() {
+//        this.updatedBy=SecurityUtil.getCurrentUserLogin().isPresent()==true?
+//                SecurityUtil.getCurrentUserLogin().get():null;
+//        this.updatedAt = Instant.now();
+//    }
 }

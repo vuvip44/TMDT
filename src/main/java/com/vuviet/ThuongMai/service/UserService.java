@@ -67,7 +67,7 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public User getByEmail(String email) {
+    public User getByUsername(String email) {
         return this.userRepository.getByEmail(email);
     }
 
@@ -142,4 +142,14 @@ public class UserService {
         user.setPassword(newPassword);
         this.userRepository.save(user);
     }
+
+    public void updateUserToken(String token, String email){
+        User user=this.userRepository.getByEmail(email);
+        if(user!=null) {
+            user.setRefreshToken(token);
+            this.userRepository.save(user);
+        }
+    }
+
+
 }

@@ -126,34 +126,37 @@ public class OrderService {
 
     public ResOrderDTO getOrderById(long orderId) {
         // Lấy thông tin order theo ID
-        Order order = orderRepository.findById(orderId)
-                .orElse(null);
+        Optional<Order> orderOp=this.orderRepository.findById(orderId);
+        if(orderOp.isPresent()){
+            Order order=orderOp.get();
+            // Tạo ResOrderDTO từ order
+            ResOrderDTO resOrderDTO = new ResOrderDTO();
+            resOrderDTO.setId(order.getId());
+            resOrderDTO.setTotalPrice(order.getTotalPrice());
+            resOrderDTO.setName(order.getName());
+            resOrderDTO.setPhoneNumber(order.getPhoneNumber());
+            resOrderDTO.setAddress(order.getAddress());
+            resOrderDTO.setCreatedAt(order.getCreatedAt());
+            resOrderDTO.setUpdatedAt(order.getUpdatedAt());
+            resOrderDTO.setCreatedBy(order.getCreatedBy());
+            resOrderDTO.setUpdatedBy(order.getUpdatedBy());
+            resOrderDTO.setStatus(order.getStatus());
 
-        // Tạo ResOrderDTO từ order
-        ResOrderDTO resOrderDTO = new ResOrderDTO();
-        resOrderDTO.setId(order.getId());
-        resOrderDTO.setTotalPrice(order.getTotalPrice());
-        resOrderDTO.setName(order.getName());
-        resOrderDTO.setPhoneNumber(order.getPhoneNumber());
-        resOrderDTO.setAddress(order.getAddress());
-        resOrderDTO.setCreatedAt(order.getCreatedAt());
-        resOrderDTO.setUpdatedAt(order.getUpdatedAt());
-        resOrderDTO.setCreatedBy(order.getCreatedBy());
-        resOrderDTO.setUpdatedBy(order.getUpdatedBy());
-        resOrderDTO.setStatus(order.getStatus());
+            // Chuyển đổi danh sách OrderDetail sang danh sách ResOrderDTO.Item
+            List<ResOrderDTO.Item> items = order.getOrderDetails().stream().map(orderDetail -> {
+                ResOrderDTO.Item itemDTO = new ResOrderDTO.Item();
+                itemDTO.setName(orderDetail.getProduct().getName());
+                itemDTO.setQuantity(orderDetail.getQuantity());
+                itemDTO.setPrice(orderDetail.getPrice());
+                return itemDTO;
+            }).collect(Collectors.toList());
 
-        // Chuyển đổi danh sách OrderDetail sang danh sách ResOrderDTO.Item
-        List<ResOrderDTO.Item> items = order.getOrderDetails().stream().map(orderDetail -> {
-            ResOrderDTO.Item itemDTO = new ResOrderDTO.Item();
-            itemDTO.setName(orderDetail.getProduct().getName());
-            itemDTO.setQuantity(orderDetail.getQuantity());
-            itemDTO.setPrice(orderDetail.getPrice());
-            return itemDTO;
-        }).collect(Collectors.toList());
+            resOrderDTO.setItems(items);
 
-        resOrderDTO.setItems(items);
+            return resOrderDTO;
+        }
+        return null;
 
-        return resOrderDTO;
     }
 
     public ResultPageDTO getAllOrderByUser(Specification<Order> spec, Pageable pageable){
