@@ -2,6 +2,7 @@ package com.vuviet.ThuongMai.entity;
 
 
 
+import com.vuviet.ThuongMai.util.SecurityUtil;
 import com.vuviet.ThuongMai.util.constant.TypeDiscount;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -60,17 +61,17 @@ public class Product {
 
     private String imageUrl;
 
-//    @PrePersist
-//    public void handleBeforeCreate() {
-//        this.createdBy= SecurityUtil.getCurrentUserLogin().isPresent()==true?
-//                SecurityUtil.getCurrentUserLogin().get():null;
-//        this.createdAt = Instant.now();
-//    }
-//
-//    @PreUpdate
-//    public void handleBeforeUpdate() {
-//        this.updatedBy=SecurityUtil.getCurrentUserLogin().isPresent()==true?
-//                SecurityUtil.getCurrentUserLogin().get():null;
-//        this.updatedAt = Instant.now();
-//    }
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdBy= SecurityUtil.getCurrentUserLogin().isPresent()==true?
+                SecurityUtil.getCurrentUserLogin().get():null;
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedBy=SecurityUtil.getCurrentUserLogin().isPresent()==true?
+                SecurityUtil.getCurrentUserLogin().get():null;
+        this.updatedAt = Instant.now();
+    }
 }
