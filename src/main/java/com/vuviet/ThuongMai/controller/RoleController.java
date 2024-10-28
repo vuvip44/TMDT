@@ -63,4 +63,17 @@ public class RoleController {
         }
         return ResponseEntity.ok(this.roleService.updateRole(roleDTO));
     }
+
+    @DeleteMapping("/roles/{id}")
+    @ApiMessage("Delete role")
+    public ResponseEntity<Void> deleteRole(@PathVariable("id") long id) throws IdInValidException {
+        Role role=this.roleService.getRole(id);
+
+        if(role==null){
+            throw new IdInValidException("Id "+ id+" không tồn tại");
+        }
+        this.roleService.deleteRole(id);
+        return ResponseEntity.ok(null);
+    }
+
 }

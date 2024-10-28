@@ -61,7 +61,7 @@ public class PermissionController {
     }
 
     @GetMapping("/permissions/{id}")
-    @ApiMessage("Get a permission")
+    @ApiMessage("Get a permission by id")
     public ResponseEntity<Permission> getById(@PathVariable("id") long id) throws IdInValidException{
         Permission permissionRq=this.permissionService.getById(id);
         if(permissionRq==null){

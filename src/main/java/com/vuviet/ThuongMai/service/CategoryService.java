@@ -2,11 +2,14 @@ package com.vuviet.ThuongMai.service;
 
 import com.vuviet.ThuongMai.dto.responsedto.ResultPageDTO;
 import com.vuviet.ThuongMai.entity.Category;
+import com.vuviet.ThuongMai.entity.Product;
 import com.vuviet.ThuongMai.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -42,7 +45,10 @@ public class CategoryService {
     }
 
     public void deleteCategory(long id) {
-        categoryRepository.deleteById(id);
+
+        Category category = this.getById(id);
+        category.getProducts().forEach(product -> product.getCategories().remove(category));
+        this.categoryRepository.delete(category);
     }
 
     public Category updateCategory(Category categoryDTO) {

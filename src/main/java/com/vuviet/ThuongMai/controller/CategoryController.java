@@ -65,4 +65,14 @@ public class CategoryController {
         }
         return ResponseEntity.ok(categoryService.updateCategory(category));
     }
+
+    @DeleteMapping("/categories/{id}")
+    @ApiMessage("Delete a category")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") long id) throws IdInValidException {
+        if(this.categoryService.getById(id)==null){
+            throw new IdInValidException("Id "+id+" không tồn tại");
+        }
+        this.categoryService.deleteCategory(id);
+        return ResponseEntity.ok(null);
+    }
 }

@@ -65,4 +65,15 @@ public class BrandController {
     ) {
         return ResponseEntity.ok().body(this.brandService.getAllBrands(spec, pageable));
     }
+
+    @DeleteMapping("/brands/{id}")
+    @ApiMessage("Delete a brand")
+    public ResponseEntity<Void> deleteBrand(@PathVariable("id") long id) throws IdInValidException {
+        if(this.brandService.getBrand(id)==null){
+            throw new IdInValidException("Id "+id+" không tồn tại");
+        }
+        this.brandService.deleteBrand(id);
+        return ResponseEntity.ok(null);
+    }
+
 }
