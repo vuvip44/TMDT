@@ -44,7 +44,10 @@ public class SecurityConfiguration {
                 "/api/v1/auth/register",
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
-                "/swagger-ui.html"
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/storage/**",
+                "/api/v1/files"
         };
         http
                 .csrf(f->f.disable())

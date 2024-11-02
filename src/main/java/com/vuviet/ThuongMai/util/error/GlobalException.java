@@ -80,4 +80,15 @@ public class GlobalException {
         res.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
+
+    @ExceptionHandler(value = {
+            StorageException.class
+    })
+    public ResponseEntity<RestResponse<Object>> handleFileUploadException(Exception ex){
+        RestResponse<Object> res=new RestResponse<>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError("Exception upload file...");
+        res.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+    }
     }
