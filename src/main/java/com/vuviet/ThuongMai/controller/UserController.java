@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    @ApiMessage("Update a user")
+    @ApiMessage("Update a user by user")
     public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody @Valid User user) throws IdInValidException {
         User userUpdated = this.userService.updateUser(user);
         if(userUpdated == null) {
@@ -60,6 +60,17 @@ public class UserController {
         }
         return ResponseEntity.ok(this.userService.convertToResUpdateToUserDTO(user));
     }
+
+    @PutMapping("/users/roles")
+    @ApiMessage("Update a role user by admin")
+    public ResponseEntity<ResUpdateUserDTO> updateRoleUser(@RequestBody @Valid User user) throws IdInValidException {
+        User userUpdated = this.userService.updateRoleUser(user);
+        if(userUpdated == null) {
+            throw new IdInValidException("User id "+user.getId()+" không tồn tại");
+        }
+        return ResponseEntity.ok(this.userService.convertToResUpdateToUserDTO(user));
+    }
+
 
     @GetMapping("/users/{id}")
     @ApiMessage("Get user by id")

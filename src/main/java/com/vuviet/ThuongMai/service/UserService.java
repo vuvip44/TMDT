@@ -22,16 +22,21 @@ public class UserService {
 
     private final RoleService roleService;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, RoleService roleService) {
+    private final RoleRepository roleRepository;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, RoleService roleService, RoleRepository roleRepository1) {
         this.userRepository = userRepository;
         this.roleService = roleService;
-
+        this.roleRepository = roleRepository1;
     }
 
     public User createUser(User user) {
         if(user.getRole()!=null) {
             Role r=this.roleService.getRole(user.getRole().getId());
+
             user.setRole(r!=null?r:null);
+        }else{
+            user.setRole(this.roleRepository.findByName("USER"));
         }
         return this.userRepository.save(user);
     }
@@ -54,10 +59,6 @@ public class UserService {
             user.setUrlAvatar(userDTO.getUrlAvatar());
             user.setPhoneNumber(userDTO.getPhoneNumber());
 
-            if(userDTO.getRole()!=null) {
-                Role r=this.roleService.getRole(userDTO.getRole().getId());
-                user.setRole(r!=null?r:null);
-            }
             user = this.userRepository.save(user);
         }
         return user;
@@ -151,5 +152,15 @@ public class UserService {
         }
     }
 
-
+    public User updateRoleUser(User userDTO) {
+        User user=this.getUserById(userDTO.getId());
+        if(user!=null){
+            if(userDTO.getRole()!=null) {
+                Role r=this.roleService.getRole(userDTO.getRole().getId());
+                user.setRole(r!=null?r:null);
+            }
+            user = this.userRepository.save(user);
+        }
+        return user;
+    }
 }

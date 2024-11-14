@@ -273,5 +273,16 @@ public class ProductService {
         return rs;
     }
 
-
+    public List<ResShortProductDTO> getTop5Product(){
+        List<Product> listProduct=this.productRepository.findTop5ByOrderByCreatedAtDesc();
+        List<ResShortProductDTO> resShortProductDTOS = new ArrayList<>();
+        for(Product product : listProduct){
+            ResShortProductDTO resShortProductDTO = new ResShortProductDTO();
+            resShortProductDTO.setName(product.getName());
+            resShortProductDTO.setPrice(product.getPriceUnit());
+            resShortProductDTO.setTotalSold(product.getTotalSold());
+            resShortProductDTOS.add(resShortProductDTO);
+        }
+        return resShortProductDTOS;
+    }
 }

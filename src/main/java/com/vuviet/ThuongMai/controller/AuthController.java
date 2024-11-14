@@ -8,6 +8,7 @@ import com.vuviet.ThuongMai.service.UserService;
 import com.vuviet.ThuongMai.util.SecurityUtil;
 import com.vuviet.ThuongMai.util.annotation.ApiMessage;
 import com.vuviet.ThuongMai.util.error.IdInValidException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -17,10 +18,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -180,5 +186,69 @@ public class AuthController {
 
         User createUser=this.userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(createUser));
+    }
+
+    @GetMapping("/auth/token")
+    @ApiMessage("Get access token from google")
+    public ResponseEntity<ResLoginDTO> getAccessToken(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        if (oAuth2User == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        String email = attributes.get("email").toString();
+        String name = attributes.get("name").toString();
+//        String id=attributes.get("id").toString();// hoặc bất kỳ thông tin nào khác mà Google cung cấp
+
+        //set thong tin nguoi dung dang nhap vao context(co the su dung sau nay)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Tìm user theo email
+        User currentUser = this.userService.getByUsername(email);
+
+        // Nếu user không tồn tại, tạo mới
+        if (currentUser == null) {
+            String encodedPassword = passwordEncoder.encode(email);
+            currentUser = new User();
+            currentUser.setEmail(email);
+            currentUser.setName(name);
+            currentUser.setPassword(encodedPassword);
+
+             // Đặt role mặc định cho user mới
+            currentUser = this.userService.createUser(currentUser); // Lưu user mới vào database
+        }
+
+
+
+        // Khởi tạo ResLoginDTO với thông tin user
+        ResLoginDTO res = new ResLoginDTO();
+        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+                currentUser.getId(),
+                currentUser.getEmail(),
+                currentUser.getName(),
+                currentUser.getRole()
+        );
+        res.setUser(userLogin);
+
+        // Tạo access token
+        String access_token = this.securityUtil.createAccessToken(email, res);
+        res.setAccessToken(access_token);
+
+        // Tạo refresh token và lưu vào database
+        String refresh_token = this.securityUtil.createRefreshToken(email, res);
+        this.userService.updateUserToken(refresh_token, email);
+
+        // Thiết lập cookie cho refresh token
+        ResponseCookie resCookies = ResponseCookie.from("refresh_token", refresh_token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(refreshTokenExpiration)
+                .build();
+
+        // Trả về phản hồi với thông tin user và access token
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                .body(res);
     }
 }

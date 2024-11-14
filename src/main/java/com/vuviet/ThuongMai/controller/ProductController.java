@@ -3,6 +3,7 @@ package com.vuviet.ThuongMai.controller;
 import com.vuviet.ThuongMai.dto.requestdto.ReqCreateProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResCreateProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResProductDetailDTO;
+import com.vuviet.ThuongMai.dto.responsedto.ResShortProductDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResultPageDTO;
 import com.vuviet.ThuongMai.entity.Product;
 import com.vuviet.ThuongMai.service.BrandService;
@@ -18,6 +19,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -97,5 +100,11 @@ public class ProductController {
             Pageable pageable
     ){
         return ResponseEntity.ok(this.productService.getAllShortProduct(spec, pageable));
+    }
+
+    @GetMapping("/products/topOrder")
+    @ApiMessage("Get product top 5 order")
+    public ResponseEntity<List<ResShortProductDTO>> getTopProductsByOrder(){
+        return ResponseEntity.ok(this.productService.getTop5Product());
     }
 }

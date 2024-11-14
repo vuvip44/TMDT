@@ -24,9 +24,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
     @Transactional
     public boolean preHandle(
             HttpServletRequest request,
-            HttpServletResponse response,
-            Object handler
-    ) throws Exception {
+            HttpServletResponse response, Object handler)
+            throws Exception {
         String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
         String requestURI = request.getRequestURI();
         String httpMethod = request.getMethod();
@@ -36,20 +35,22 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         //check permission
-        String email= SecurityUtil.getCurrentUserLogin().isPresent()==true?
-                SecurityUtil.getCurrentUserLogin().get():null;
-        if(email!=null && !email.isEmpty()){
+        String email= SecurityUtil.getCurrentUserLogin().isPresent()==true
+                ?SecurityUtil.getCurrentUserLogin().get() : "";
+        if(email!=null&&!email.isEmpty()){
             User user=this.userService.getByUsername(email);
             if(user!=null){
                 Role role=user.getRole();
                 if(role!=null){
                     List<Permission> permissions=role.getPermissions();
-                    boolean isAllow=permissions.stream().anyMatch(permission->
-                            permission.getApiPath().equals(path) && permission.getMethod().equals(httpMethod));
+                    boolean isAllow=permissions.stream().anyMatch(item->
+                            item.getApiPath().equals(path)
+                                    && item.getMethod().equals(httpMethod));
+
                     if(isAllow==false){
                         throw new PermissionException("Bạn không đủ quyền truy cập");
                     }
-                }else{
+                } else {
                     throw new PermissionException("Bạn không đủ quyền truy cập");
                 }
             }
