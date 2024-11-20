@@ -22,7 +22,7 @@ public class StaticResourcesWebConfiguration implements WebMvcConfigurer {
 //        registry.addResourceHandler("/css/**")
 //                .addResourceLocations(baseURI+"shop/css/");
 
-        registry.addResourceHandler("/image/**").addResourceLocations("classpath:/static/image/")
+        registry.addResourceHandler("/image/**").addResourceLocations(baseURI+"images/")
                 .setCacheControl(CacheControl.maxAge(2, TimeUnit.HOURS).cachePublic());
         registry.addResourceHandler("/vendor/**").addResourceLocations("classpath:/static/vendor/")
                 .setCacheControl(CacheControl.maxAge(2, TimeUnit.HOURS).cachePublic());

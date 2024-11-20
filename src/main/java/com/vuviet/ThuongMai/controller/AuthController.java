@@ -1,14 +1,17 @@
 package com.vuviet.ThuongMai.controller;
 
 import com.vuviet.ThuongMai.dto.requestdto.LoginDTO;
+
+import com.vuviet.ThuongMai.dto.requestdto.StringRequestDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResCreateUserDTO;
 import com.vuviet.ThuongMai.dto.responsedto.ResLoginDTO;
 import com.vuviet.ThuongMai.entity.User;
+import com.vuviet.ThuongMai.service.OtpTokenService;
 import com.vuviet.ThuongMai.service.UserService;
 import com.vuviet.ThuongMai.util.SecurityUtil;
 import com.vuviet.ThuongMai.util.annotation.ApiMessage;
 import com.vuviet.ThuongMai.util.error.IdInValidException;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -25,25 +28,32 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     private final SecurityUtil securityUtil;
+
     private final UserService userService;
+
+    private final OtpTokenService otpTokenService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Value("${vuviet.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService, PasswordEncoder passwordEncoder) {
+    @Value("${vuviet.jwt.otp-token-validity-in-seconds}")
+    private long otpTokenExpiration;
+
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService, OtpTokenService otpTokenService, PasswordEncoder passwordEncoder) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.otpTokenService = otpTokenService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -250,5 +260,79 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, resCookies.toString())
                 .body(res);
+    }
+
+    @PostMapping("/auth/send-otp")
+    @ApiMessage("Send email")
+    public ResponseEntity<StringRequestDTO> sendEmail(@RequestParam String email) throws IdInValidException {
+        if(!this.userService.isEmailExist(email)) {
+            throw new IdInValidException("Không tồn tại user có email: "+email);
+        }
+
+        //gui otp den email
+        String otp=this.otpTokenService.generateOtp(email);
+        this.otpTokenService.sendOtp(email, otp);
+
+        //sinh token tam thoi
+        String token=this.securityUtil.generateTemporaryToken(email);
+
+        StringRequestDTO requestDTO=new StringRequestDTO();
+        requestDTO.setValue(token);
+
+        ResponseCookie resCookies=ResponseCookie.from("temporary-token",token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(otpTokenExpiration)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE,resCookies.toString())
+                .body(requestDTO);
+    }
+
+    @PostMapping("/auth/validate-otp")
+    @ApiMessage("Input otp")
+    public ResponseEntity<StringRequestDTO>validateOtp(
+            @CookieValue(name="temporary-token", defaultValue = "abc") String temporaryToken,
+            String otp
+    ) throws IdInValidException{
+        if(temporaryToken.equals("abc")){
+            throw new IdInValidException("Không có temporary-token ở cookie");
+        }
+        Jwt decodedToken=this.securityUtil.checkValidRefreshToken(temporaryToken);
+        String email=decodedToken.getSubject();
+
+        if(!this.otpTokenService.validateOtp(email,otp)){
+            throw new IdInValidException("Mã Otp sai");
+        }
+        StringRequestDTO requestDTO=new StringRequestDTO();
+        requestDTO.setValue("Mã Otp hợp lệ");
+        return ResponseEntity.ok(requestDTO);
+    }
+
+    @PostMapping("/auth/change-password")
+    @ApiMessage("Change password")
+    public ResponseEntity<StringRequestDTO> changePassword(
+            @CookieValue(name="temporary-token", defaultValue = "abc") String temporaryToken,
+            String newPassword
+    ) throws IdInValidException{
+        if(temporaryToken.equals("abc")){
+            throw new IdInValidException("Không có temporary-token ở cookie");
+        }
+        Jwt decodedToken=this.securityUtil.checkValidRefreshToken(temporaryToken);
+        String email=decodedToken.getSubject();
+
+        User user=this.userService.getByUsername(email);
+
+        this.userService.updatePassword(email, user);
+        ResponseCookie deleteCookie = ResponseCookie.from("temporary-token", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        StringRequestDTO requestDTO=new StringRequestDTO();
+        requestDTO.setValue("Đổi mật khẩu thành công");
+        return ResponseEntity.ok(requestDTO);
     }
 }

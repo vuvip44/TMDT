@@ -41,6 +41,9 @@ public class SecurityUtil {
     @Value("${vuviet.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
+    @Value("${vuviet.jwt.otp-token-validity-in-seconds}")
+    private long otpTokenExpiration;
+
     public String createAccessToken(String email,ResLoginDTO dto) {
         ResLoginDTO.UserInsideToken userToken=new ResLoginDTO.UserInsideToken();
         userToken.setId(dto.getUser().getId());
@@ -89,6 +92,20 @@ public class SecurityUtil {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
 
     }
+
+    public String generateTemporaryToken(String email) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(otpTokenExpiration, ChronoUnit.SECONDS);
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.from(jwtKey).decode();

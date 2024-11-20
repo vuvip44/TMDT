@@ -60,6 +60,8 @@ public class SecurityConfiguration {
                 "/storage/**",
                 "/api/v1/cloudinary/upload",
                 "/api/v1/files",
+                "/api/v1/auth/send-otp/**",
+                "/api/v1/auth/change-password/**",
 
         };
         http

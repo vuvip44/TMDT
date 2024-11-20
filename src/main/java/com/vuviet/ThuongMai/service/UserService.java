@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -24,10 +25,13 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, RoleService roleService, RoleRepository roleRepository1) {
+    private final EmailService emailService;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, RoleService roleService, RoleRepository roleRepository1, EmailService emailService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.roleRepository = roleRepository1;
+        this.emailService = emailService;
     }
 
     public User createUser(User user) {
@@ -140,6 +144,7 @@ public class UserService {
     }
 
     public void updatePassword(String newPassword,User user) {
+
         user.setPassword(newPassword);
         this.userRepository.save(user);
     }
@@ -163,4 +168,7 @@ public class UserService {
         }
         return user;
     }
+
+
+
 }
