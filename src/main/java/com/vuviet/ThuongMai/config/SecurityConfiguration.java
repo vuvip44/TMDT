@@ -62,7 +62,8 @@ public class SecurityConfiguration {
                 "/api/v1/files",
                 "/api/v1/auth/send-otp/**",
                 "/api/v1/auth/change-password/**",
-
+                "/api/v1/payment/**",
+                "/vnpay_jsp/**"
         };
         http
                 .csrf(f -> f.disable())
