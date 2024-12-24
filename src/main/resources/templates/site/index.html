@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragment Header</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="header-fragment"></div> <!-- Nơi header được load -->
+
+<script>
+    // Load fragment header.html
+    fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-fragment').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading header:', error));
+</script>
+</body>
+</html>

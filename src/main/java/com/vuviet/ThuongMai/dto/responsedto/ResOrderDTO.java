@@ -2,6 +2,8 @@ package com.vuviet.ThuongMai.dto.responsedto;
 
 import com.vuviet.ThuongMai.util.constant.OrderStatus;
 
+import com.vuviet.ThuongMai.util.constant.PaymentMethod;
+import com.vuviet.ThuongMai.util.constant.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +32,10 @@ public class ResOrderDTO {
     private String updatedBy;
 
     private OrderStatus status;
+
+    private PaymentMethod paymentMethod;
+
+    private PaymentStatus paymentStatus;
 
     private List<Item> items;
 

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,16 @@ public class CloudinaryService {
     public Map upload(MultipartFile file)  {
         try{
             Map<String, Object> uploadParams = new HashMap<>();
-            String uniqueFileName=file.getOriginalFilename()+"-"+System.currentTimeMillis();
+            // Lấy tên tệp gốc và loại bỏ phần mở rộng
+            String originalFilename = file.getOriginalFilename();
+
+            // Loại bỏ phần mở rộng
+            String fileNameWithoutExtension = originalFilename.substring(0, originalFilename.lastIndexOf('.'));
+
+            // Tạo tên duy nhất bằng cách thêm timestamp
+            String uniqueFileName = fileNameWithoutExtension + "-" + System.currentTimeMillis();
+
+
             uploadParams.put("folder", "tmdt");
             uploadParams.put("public_id", uniqueFileName); // Đặt tên cho tệp tin
             uploadParams.put("resource_type", "image");

@@ -38,19 +38,31 @@ public class ProductController {
         this.brandService = brandService;
     }
 
+//    @PostMapping("/products")
+//    @ApiMessage("Create a product")
+//    public ResponseEntity<ResCreateProductDTO> createProduct(@RequestBody @Valid ReqCreateProductDTO req) throws IdInValidException {
+//        if(this.productService.isExistProduct(req)){
+//            throw new IdInValidException("Sản phẩm "+req.getName()+" đã tồn tại");
+//        }
+//
+//        if(this.brandService.getBrand(req.getBrandId()) == null){
+//            throw new IdInValidException("Sản phẩm thuộc brand: "+req.getBrandId()+" không tồn tại");
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.createProduct(req));
+//    }
     @PostMapping("/products")
-    @ApiMessage("Create a product")
-    public ResponseEntity<ResCreateProductDTO> createProduct(@RequestBody @Valid ReqCreateProductDTO req) throws IdInValidException {
+    @ApiMessage("Create a products")
+    public ResponseEntity<ResCreateProductDTO> create(@RequestBody ReqCreateProductDTO req) throws IdInValidException {
         if(this.productService.isExistProduct(req)){
             throw new IdInValidException("Sản phẩm "+req.getName()+" đã tồn tại");
         }
-
-        if(this.brandService.getBrand(req.getBrandId()) == null){
-            throw new IdInValidException("Sản phẩm thuộc brand: "+req.getBrandId()+" không tồn tại");
-        }
-
+//        if(this.brandService.getBrand(req.getBrandId())==null){
+//            throw new IdInValidException("Brand "+req.getBrandId()+" không tồn tại");
+//        }
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.createProduct(req));
     }
+
 
     @PutMapping("/products")
     @ApiMessage("Update a product")

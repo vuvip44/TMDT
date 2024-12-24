@@ -47,6 +47,8 @@ public class OrderService {
         order.setAddress(req.getAddress());
         order.setPhoneNumber(req.getPhoneNumber());
         order.setStatus(OrderStatus.ORDER);
+        order.setPaymentStatus(req.getPaymentStatus());
+        order.setPaymentMethod(req.getPaymentMethod());
 
         User user=this.userRepository.findById(req.getUserId()).get();
         order.setUser(user);
@@ -62,7 +64,8 @@ public class OrderService {
         resOrderDTO.setCreatedAt(order.getCreatedAt());
         resOrderDTO.setUpdatedBy(order.getUpdatedBy());
         resOrderDTO.setUpdatedAt(order.getUpdatedAt());
-
+        resOrderDTO.setPaymentMethod(order.getPaymentMethod());
+        resOrderDTO.setPaymentStatus(order.getPaymentStatus());
         long totalPrice = 0;
 
         List<OrderDetail> orderDetails=new ArrayList<>();

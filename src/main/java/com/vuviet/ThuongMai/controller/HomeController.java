@@ -23,7 +23,7 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String homelogin(@AuthenticationPrincipal OidcUser oidcUser) {
-        return "hello " + oidcUser.getName()+", email "+oidcUser.getEmail();
+        return "hello " + oidcUser.getFullName()+", email "+oidcUser.getEmail();
     }
 
     @GetMapping("/api/user")

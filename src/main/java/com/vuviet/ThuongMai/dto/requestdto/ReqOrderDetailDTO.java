@@ -1,5 +1,7 @@
 package com.vuviet.ThuongMai.dto.requestdto;
 
+import com.vuviet.ThuongMai.util.constant.PaymentMethod;
+import com.vuviet.ThuongMai.util.constant.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,10 @@ public class ReqOrderDetailDTO {
     private List<ItemDTO> items;
 
     private Long userId;
+
+    private PaymentMethod paymentMethod;
+
+    private PaymentStatus paymentStatus;
 
     @Data
     @AllArgsConstructor

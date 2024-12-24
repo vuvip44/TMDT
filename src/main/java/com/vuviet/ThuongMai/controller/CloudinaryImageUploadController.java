@@ -1,5 +1,6 @@
 package com.vuviet.ThuongMai.controller;
 
+import com.vuviet.ThuongMai.dto.responsedto.StringResponseDTO;
 import com.vuviet.ThuongMai.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,11 @@ public class CloudinaryImageUploadController {
     private final CloudinaryService cloudinaryService;
 
     @PostMapping
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file){
+    public ResponseEntity<StringResponseDTO> uploadImage(@RequestParam("image") MultipartFile file){
         Map data = this.cloudinaryService.upload(file);
         String url=data.get("url").toString();
-        return new ResponseEntity<>(url, HttpStatus.OK);
+        StringResponseDTO responseDTO=new StringResponseDTO();
+        responseDTO.setMessage(url);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

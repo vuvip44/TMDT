@@ -71,7 +71,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             arr.add(new Permission("Get a permission by id", "/api/v1/permissions/{id}", "GET", "PERMISSIONS"));
             arr.add(new Permission("Fetch all permissions", "/api/v1/permissions", "GET", "PERMISSIONS"));
 
-            arr.add(new Permission("Create a product", "/api/v1/products", "POST", "PRODUCTS"));
+            arr.add(new Permission("Create a product","/api/v1/admin/products","POST","PRODUCTS"));
             arr.add(new Permission("Update a product", "/api/v1/products", "PUT", "PRODUCTS"));
             arr.add(new Permission("Get product detail by id", "/api/v1/products/{id}", "GET", "PRODUCTS"));
             arr.add(new Permission("Get all product by admin", "/api/v1/admin/products", "GET", "PRODUCTS"));
@@ -85,6 +85,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             arr.add(new Permission("Update a role user by admin", "/api/v1/users/roles", "PUT", "USERS"));
             arr.add(new Permission("Get user by id", "/api/v1/users/{id}", "GET", "USERS"));
 
+            arr.add(new Permission("Count user", "/api/v1/admin/count/users", "GET", "USERS"));
             this.permissionRepository.saveAll(arr);
         }
 

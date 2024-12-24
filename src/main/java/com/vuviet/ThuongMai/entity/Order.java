@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.vuviet.ThuongMai.util.SecurityUtil;
 import com.vuviet.ThuongMai.util.constant.OrderStatus;
+import com.vuviet.ThuongMai.util.constant.PaymentMethod;
+import com.vuviet.ThuongMai.util.constant.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -36,6 +38,12 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

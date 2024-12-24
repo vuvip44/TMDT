@@ -55,6 +55,10 @@ public class Product {
     inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Category> categories;
 
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
+
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
